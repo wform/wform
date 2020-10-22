@@ -71,34 +71,34 @@ package worm
 #### Where查询条件(简单条件)
 ```go
     // 获取第一个匹配记录
-    worm.E(user).Where("name = ?", "wnote").One()
-    //// SELECT * FROM users WHERE name = 'wnote' limit 1;
+    worm.E(user).Where("name = ?", "wform").One()
+    //// SELECT * FROM users WHERE name = 'wform' limit 1;
     
     // 获取所有匹配记录
-     worm.E(user).Where("name = ?", "wnote").All()
-    //// SELECT * FROM users WHERE name = 'wnote';
+     worm.E(user).Where("name = ?", "wform").All()
+    //// SELECT * FROM users WHERE name = 'wform';
     
-     worm.E(user).Where("name <> ?", "wnote").All()
+     worm.E(user).Where("name <> ?", "wform").All()
     
     // IN
-     worm.E(user).Where("name in (?)", []string{"wnote", "wnote 2"}).All()
+     worm.E(user).Where("name in (?)", []string{"wform", "wform 2"}).All()
     
     // LIKE
      worm.E(user).Where("name LIKE ?", "%worm%").All()
     
     // AND
-     worm.E(user).Where("name = ? AND age >= ?", "wnote", "22").All()
+     worm.E(user).Where("name = ? AND age >= ?", "wform", "22").All()
     
 ```
 #### Where复杂条件（Struct & Map）
 ```go
     // Struct
-    worm.E(user).Where(&User{Name: "wnote", Age: 20}).One()
-    //// SELECT * FROM users WHERE name = "wnote" AND age = 20 LIMIT 1;
+    worm.E(user).Where(&User{Name: "wform", Age: 20}).One()
+    //// SELECT * FROM users WHERE name = "wform" AND age = 20 LIMIT 1;
     
     // Map
-    worm.E(user).Where(map[string]interface{}{"name": "wnote", "age": 20}).All()
-    //// SELECT * FROM users WHERE name = "wnote" AND age = 20;
+    worm.E(user).Where(map[string]interface{}{"name": "wform", "age": 20}).All()
+    //// SELECT * FROM users WHERE name = "wform" AND age = 20;
     
     // 主键的Slice
     worm.E(user).Where([]int64{20, 21, 22}).All()
@@ -106,24 +106,24 @@ package worm
 ```
 #### Where Not查询
 ```go
-    worm.E(user).Not("name", "wnote").One()
-    //// SELECT * FROM users WHERE name <> "wnote" LIMIT 1;
+    worm.E(user).Not("name", "wform").One()
+    //// SELECT * FROM users WHERE name <> "wform" LIMIT 1;
     
     // Not In
-    worm.E(user).Not("name", []string{"wnote", "wnote 2"}).All()
-    //// SELECT * FROM users WHERE name NOT IN ("wnote", "wnote 2");
+    worm.E(user).Not("name", []string{"wform", "wform 2"}).All()
+    //// SELECT * FROM users WHERE name NOT IN ("wform", "wform 2");
     
     // Not In slice of primary keys
     worm.E(user).Not([]int64{1,2,3}).One()
     //// SELECT * FROM users WHERE id NOT IN (1,2,3);
     
     // Plain SQL
-    worm.E(user).Not("name = ?", "wnote").One()
-    //// SELECT * FROM users WHERE NOT(name = "wnote");
+    worm.E(user).Not("name = ?", "wform").One()
+    //// SELECT * FROM users WHERE NOT(name = "wform");
     
     // Struct
-    worm.E(user).Not(User{Name: "wnote"}).One()
-    //// SELECT * FROM users WHERE name <> "wnote";
+    worm.E(user).Not(User{Name: "wform"}).One()
+    //// SELECT * FROM users WHERE name <> "wform";
 ```
 
 #### Where Or条件查询
@@ -132,11 +132,11 @@ package worm
     //// SELECT * FROM users WHERE role = 'admin' OR role = 'super_admin';
     
     // Struct
-    worm.E(user).Where("name = 'wnote'").Or(User{Name: "wnote 2"}).All()
-    //// SELECT * FROM users WHERE name = 'wnote' OR name = 'wnote 2';
+    worm.E(user).Where("name = 'wform'").Or(User{Name: "wform 2"}).All()
+    //// SELECT * FROM users WHERE name = 'wform' OR name = 'wform 2';
     
     // Map
-    worm.E(user).Where("name = 'wnote'").Or(map[string]interface{}{"name": "wnote 2"}).All()
+    worm.E(user).Where("name = 'wform'").Or(map[string]interface{}{"name": "wform 2"}).All()
 ```
 
 #### 扩展查询选项
@@ -199,12 +199,12 @@ package worm
 
 #### Count
 ```go
-    worm.E().Where("name = ?", "wnote").Or("name = ?", "wnote 2").Find(&users).Count(&count)
-    // SELECT * from USERS WHERE name = 'wnote' OR name = 'wnote 2'; (users)
-    // SELECT count(*) FROM users WHERE name = 'wnote' OR name = 'wnote 2'; (count)
+    worm.E().Where("name = ?", "wform").Or("name = ?", "wform 2").Find(&users).Count(&count)
+    // SELECT * from USERS WHERE name = 'wform' OR name = 'wform 2'; (users)
+    // SELECT count(*) FROM users WHERE name = 'wform' OR name = 'wform 2'; (count)
     
-    worm.E().Where("name = ?", "wnote").Count(&count)
-    // SELECT count(*) FROM users WHERE name = 'wnote'; (count)
+    worm.E().Where("name = ?", "wform").Count(&count)
+    // SELECT count(*) FROM users WHERE name = 'wform'; (count)
     
     worm.E().Table("deleted_users").Count(&count)
     // SELECT count(*) FROM deleted_users;
@@ -231,7 +231,7 @@ package worm
     worm.E(user).Select("users.name, emails.email").Joins("left join emails on emails.user_id = users.id").Scan(&results)
     
     // 多个连接与参数
-    worm.E(user).Joins("JOIN emails ON emails.user_id = users.id AND emails.email = ?", "wnote@wnote.net").Joins("JOIN credit_cards ON credit_cards.user_id = users.id").Where("credit_cards.number = ?", "411111111111").Find(&user)
+    worm.E(user).Joins("JOIN emails ON emails.user_id = users.id AND emails.email = ?", "wform@wform.net").Joins("JOIN credit_cards ON credit_cards.user_id = users.id").Where("credit_cards.number = ?", "411111111111").Find(&user)
 ```
 
 #### Pluck
@@ -273,10 +273,10 @@ package worm
 ### 更新
 #### 更新全部非空字段
  ```go
-    user.Name = "wnote 2"
+    user.Name = "wform 2"
     user.Age = 100
     worm.E(user).Save()
-    // UPDATE users SET name='wnote 2', age=100, birthday='2016-01-01', updated_at = '2013-11-17 21:34:10' WHERE id=111;
+    // UPDATE users SET name='wform 2', age=100, birthday='2016-01-01', updated_at = '2013-11-17 21:34:10' WHERE id=111;
 ```
 
 #### 更新更改字段
