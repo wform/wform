@@ -5,7 +5,7 @@ type Panic struct {
 	Err error
 }
 
-func WformPanic(str interface{}) {
+func WormPanic(str interface{}) {
 	switch str.(type) {
 	case string:
 		panic(Panic{Msg: str.(string)})

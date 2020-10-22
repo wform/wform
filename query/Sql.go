@@ -5,9 +5,9 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/wform/wform/werror"
-	"github.com/wform/wform/model"
-	"github.com/wform/wform/utils"
+	"github.com/wform/worm/werror"
+	"github.com/wform/worm/model"
+	"github.com/wform/worm/utils"
 )
 
 // struct for build SQL
@@ -182,7 +182,7 @@ func (sql *Sql) SetTable(tableName string) {
 // build select SQL statement
 func (sql *Sql) BuildSelect() string {
 	if sql.getTable() == "" {
-		werror.WformPanic("table is empty")
+		werror.WormPanic("table is empty")
 	}
 	queryString := "SELECT "
 	if sql.column == "" {
@@ -224,10 +224,10 @@ func (sql *Sql) BuildSelect() string {
 // Build SQL statement for delete record from table
 func (sql *Sql) BuildDelete() string {
 	if sql.getTable() == "" {
-		werror.WformPanic("table is empty")
+		werror.WormPanic("table is empty")
 	}
 	if !sql.HasCondition() {
-		werror.WformPanic("condition is empty")
+		werror.WormPanic("condition is empty")
 	}
 	queryString := "DELETE FROM " + sql.getTable() + " WHERE " + sql.WhereSql()
 	if sql.limit != "" {
@@ -343,10 +343,10 @@ func (sql *Sql) WhereSql() string {
 				}
 				whereStr += strings.Join(condStr, " AND ")
 			} else {
-				werror.WformPanic("type error")
+				werror.WormPanic("type error")
 			}
 		default:
-			werror.WformPanic(" where error ")
+			werror.WormPanic(" where error ")
 		}
 		if exp.logic == LogicAndNot {
 			whereStr += ")"

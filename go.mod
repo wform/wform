@@ -1,4 +1,4 @@
-module github.com/wform/wform
+module github.com/wform/worm
 
 go 1.13
 

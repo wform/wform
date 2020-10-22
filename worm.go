@@ -1,16 +1,16 @@
-package wform
+package worm
 
 import (
-	"github.com/wform/wform/query"
-	"github.com/wform/wform/utils"
-	"github.com/wform/wform/werror"
+	"github.com/wform/worm/query"
+	"github.com/wform/worm/utils"
+	"github.com/wform/worm/werror"
 )
 
 func E(dao ...interface{}) *Engine {
 	engine := Engine{}
 	sqlDb, err := GetDb()
 	if err != nil {
-		werror.WformPanic(err)
+		werror.WormPanic(err)
 	}
 	engine.SetDb(sqlDb)
 	if len(dao) != 0 {

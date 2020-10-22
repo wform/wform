@@ -3,7 +3,7 @@ package model
 import (
 	"reflect"
 
-	"github.com/wform/wform/utils"
+	"github.com/wform/worm/utils"
 )
 
 func Model2Map(obj interface{}, ignoreEmpty bool) map[string]interface{} {
@@ -25,7 +25,7 @@ func parseEmbedStruct(data map[string]interface{}, objType reflect.Type, objValu
 			if objType.Field(i).Anonymous {
 				data = parseEmbedStruct(data, objType.Field(i).Type, objValue.Field(i), ignoreEmpty)
 			} else {
-				fieldName = getWformTagFieldValue(objType.Field(i), "field")
+				fieldName = getWormTagFieldValue(objType.Field(i), "field")
 				if fieldName == "" {
 					fieldName = utils.ParseName(objType.Field(i).Name)
 				}

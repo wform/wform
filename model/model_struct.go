@@ -5,8 +5,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/wform/wform/utils"
-	"github.com/wform/wform/werror"
+	"github.com/wform/worm/utils"
+	"github.com/wform/worm/werror"
 )
 
 // the struct attributes
@@ -49,7 +49,7 @@ func ParseStruct(d interface{}) (ModelStruct, interface{}) {
 		daoIsPtr = true
 	}
 	if structType.Kind() != reflect.Struct {
-		werror.WformPanic("struct error")
+		werror.WormPanic("struct error")
 	}
 	structValue := reflect.New(structType)
 	if !daoIsPtr {
@@ -99,7 +99,7 @@ func ParseStruct(d interface{}) (ModelStruct, interface{}) {
 		if structType.Field(i).Type.Kind() == reflect.Struct {
 			innerType := structType.Field(i).Type
 			for j := 0; j < innerType.NumField(); j++ {
-				fieldTagMap := getWformTagMap(innerType.Field(j))
+				fieldTagMap := getWormTagMap(innerType.Field(j))
 				columnName = fieldTagMap["column"]
 				if columnName == "" {
 					columnName = utils.ParseName(innerType.Field(j).Name)
@@ -118,7 +118,7 @@ func ParseStruct(d interface{}) (ModelStruct, interface{}) {
 			}
 			continue
 		}
-		fieldTagMap := getWformTagMap(structType.Field(i))
+		fieldTagMap := getWormTagMap(structType.Field(i))
 		columnName = fieldTagMap["column"]
 		if columnName == "" {
 			columnName = utils.ParseName(structType.Field(i).Name)
@@ -150,20 +150,20 @@ func ParseStruct(d interface{}) (ModelStruct, interface{}) {
 	return parsedModelStruct, daoValue.Interface()
 }
 
-func getWformTagMap(params ...interface{}) map[string]string {
+func getWormTagMap(params ...interface{}) map[string]string {
 	if len(params) == 0 {
-		werror.WformPanic("params error")
+		werror.WormPanic("params error")
 	}
 	field := params[0].(reflect.StructField)
 	var tagKey string
 	if len(params) > 1 {
 		tagKey = params[1].(string)
 	}
-	wformTag := field.Tag.Get("db")
+	wormTag := field.Tag.Get("db")
 	fieldTagMap := map[string]string{}
-	if wformTag != "" {
-		wformTagList := strings.Split(wformTag, ";")
-		for _, subTag := range wformTagList {
+	if wormTag != "" {
+		wormTagList := strings.Split(wormTag, ";")
+		for _, subTag := range wormTagList {
 			subTagSplit := strings.Split(subTag, ":")
 			switch len(subTagSplit) {
 			case 2:
@@ -179,7 +179,7 @@ func getWformTagMap(params ...interface{}) map[string]string {
 	return fieldTagMap
 }
 
-func getWformTagFieldValue(field reflect.StructField, fieldName string) string {
-	fieldTagMap := getWformTagMap(field, fieldName)
+func getWormTagFieldValue(field reflect.StructField, fieldName string) string {
+	fieldTagMap := getWormTagMap(field, fieldName)
 	return fieldTagMap[fieldName]
 }

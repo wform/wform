@@ -1,10 +1,10 @@
-package wform
+package worm
 
 import (
 	"database/sql"
 
-	"github.com/wform/wform/model"
-	"github.com/wform/wform/query"
+	"github.com/wform/worm/model"
+	"github.com/wform/worm/query"
 )
 
 type Engine struct {

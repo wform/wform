@@ -1,4 +1,4 @@
-package wform
+package worm
 
 import (
 	"database/sql"
@@ -9,11 +9,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/wform/wform/werror"
+	"github.com/wform/worm/werror"
 
-	"github.com/wform/wform/model"
-	"github.com/wform/wform/query"
-	"github.com/wform/wform/utils"
+	"github.com/wform/worm/model"
+	"github.com/wform/worm/query"
+	"github.com/wform/worm/utils"
 )
 
 // Change query table
@@ -49,7 +49,7 @@ func (engine *Engine) Not(query interface{}, values ...interface{}) *Engine {
 
 func (engine *Engine) Select(params ...interface{}) *Engine {
 	if len(params) == 0 {
-		werror.WformPanic("Select params error")
+		werror.WormPanic("Select params error")
 	}
 	switch params[0].(type) {
 	case string:
@@ -57,7 +57,7 @@ func (engine *Engine) Select(params ...interface{}) *Engine {
 	case []string:
 		engine.sql.Select(strings.Join(params[0].([]string), ","))
 	default:
-		werror.WformPanic("Select params error")
+		werror.WormPanic("Select params error")
 	}
 	return engine
 }
@@ -220,10 +220,10 @@ func (engine *Engine) Find(dao interface{}) error {
 	engine.Dao(dao)
 	daoValue := reflect.ValueOf(dao)
 	if daoValue.Kind() != reflect.Ptr {
-		werror.WformPanic("address is nil")
+		werror.WormPanic("address is nil")
 	}
 	if daoValue.IsNil() {
-		werror.WformPanic("value is nil")
+		werror.WormPanic("value is nil")
 	}
 	//addressDaoValue := daoValue
 	daoValue = daoValue.Elem()
@@ -252,7 +252,7 @@ func (engine *Engine) Find(dao interface{}) error {
 func (engine *Engine) Pluck(name string, fieldValues interface{}) error {
 	rfVal := reflect.ValueOf(fieldValues)
 	if rfVal.Kind() != reflect.Ptr {
-		werror.WformPanic("fieldValues must be pointer")
+		werror.WormPanic("fieldValues must be pointer")
 	}
 	rfVal = rfVal.Elem()
 
@@ -272,7 +272,7 @@ func (engine *Engine) Pluck(name string, fieldValues interface{}) error {
 	case reflect.Slice:
 	case reflect.String:
 	default:
-		werror.WformPanic("FieldValues must be slice or array")
+		werror.WormPanic("FieldValues must be slice or array")
 	}
 
 	if rfVal.Kind() != reflect.Slice {
@@ -324,7 +324,7 @@ func (engine *Engine) Pluck(name string, fieldValues interface{}) error {
 				}
 				paramValue.SetString(fieldStr)
 			default:
-				werror.WformPanic(fmt.Sprintf("does not support this type %v", k))
+				werror.WormPanic(fmt.Sprintf("does not support this type %v", k))
 			}
 			rfVal.Set(reflect.Append(rfVal, paramValue))
 		case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
@@ -376,7 +376,7 @@ func (engine *Engine) Create(models ...interface{}) error {
 		if engine.dao != nil {
 			models = []interface{}{engine.dao}
 		} else {
-			werror.WformPanic(" model can not be nil")
+			werror.WormPanic(" model can not be nil")
 		}
 	} else {
 		engine.Dao(models[0])
@@ -384,7 +384,7 @@ func (engine *Engine) Create(models ...interface{}) error {
 	for _, mod := range models {
 		modVal := reflect.ValueOf(mod)
 		if modVal.Kind() != reflect.Ptr {
-			werror.WformPanic("created model params must be pointer")
+			werror.WormPanic("created model params must be pointer")
 		}
 		method := modVal.MethodByName("BeforeCreate")
 		if method.Kind() == reflect.Func {
@@ -406,7 +406,7 @@ func (engine *Engine) Create(models ...interface{}) error {
 		if engine.sql.GetModelStruct().PrimaryKey != "" {
 			lastInsertId, err := result.LastInsertId()
 			if err != nil {
-				werror.WformPanic(err)
+				werror.WormPanic(err)
 			}
 			fieldName := modVal.Elem().FieldByName(engine.sql.GetModelStruct().GetPrimaryKeyAttr())
 			switch fieldName.Kind() {
@@ -417,7 +417,7 @@ func (engine *Engine) Create(models ...interface{}) error {
 			case reflect.String:
 				fieldName.SetString(strconv.Itoa(int(lastInsertId)))
 			default:
-				werror.WformPanic("Primary Key " + engine.sql.GetModelStruct().GetPrimaryKeyAttr() + ", the kind " + fieldName.Kind().String() + " not support Primary Key")
+				werror.WormPanic("Primary Key " + engine.sql.GetModelStruct().GetPrimaryKeyAttr() + ", the kind " + fieldName.Kind().String() + " not support Primary Key")
 			}
 
 		}
@@ -443,7 +443,7 @@ func (engine *Engine) updateToDb(ignoreEmpty bool, params ...interface{}) error 
 		if engine.dao != nil {
 			params = []interface{}{engine.dao}
 		} else {
-			werror.WformPanic(" model can not be nil")
+			werror.WormPanic(" model can not be nil")
 		}
 	}
 
@@ -494,7 +494,7 @@ SAVE_DONE:
 			SQL = engine.updateSql()
 		}
 		if SQL == "" {
-			werror.WformPanic("params type error")
+			werror.WormPanic("params type error")
 		}
 		result, err := engine.query(SQL)
 		engine.setRowsAffected(result)
@@ -518,7 +518,7 @@ func (engine *Engine) saveToDb(ignoreEmpty bool, models ...interface{}) error {
 		if engine.dao != nil {
 			models = []interface{}{engine.dao}
 		} else {
-			werror.WformPanic(" model can not be nil")
+			werror.WormPanic(" model can not be nil")
 		}
 	}
 
@@ -541,7 +541,7 @@ func (engine *Engine) saveToDb(ignoreEmpty bool, models ...interface{}) error {
 		var isInsert bool
 
 		if modelStruct.PrimaryKey == "" {
-			werror.WformPanic(fmt.Sprintf("%v has no PrimaryKey tag", mod))
+			werror.WormPanic(fmt.Sprintf("%v has no PrimaryKey tag", mod))
 		}
 
 		switch modVal.Kind() {
@@ -576,7 +576,7 @@ func (engine *Engine) saveToDb(ignoreEmpty bool, models ...interface{}) error {
 			var assertResult bool
 			modelMap, assertResult = mod.(map[string]interface{})
 			if assertResult {
-				werror.WformPanic(fmt.Sprintf("%v type error", mod))
+				werror.WormPanic(fmt.Sprintf("%v type error", mod))
 			}
 			sqlObj = engine.sql.Rows([]map[string]interface{}{modelMap})
 			if _, exist := modelMap[modelStruct.PrimaryKey]; exist {
@@ -606,7 +606,7 @@ func (engine *Engine) saveToDb(ignoreEmpty bool, models ...interface{}) error {
 		if isInsert && modValAddr.Kind() == reflect.Ptr && engine.sql.GetModelStruct().PrimaryKey != "" {
 			lastInsertId, err := result.LastInsertId()
 			if err != nil {
-				werror.WformPanic(err)
+				werror.WormPanic(err)
 			}
 			fieldName := modValAddr.Elem().FieldByName(engine.sql.GetModelStruct().GetPrimaryKeyAttr())
 			switch fieldName.Kind() {
@@ -617,7 +617,7 @@ func (engine *Engine) saveToDb(ignoreEmpty bool, models ...interface{}) error {
 			case reflect.String:
 				fieldName.SetString(strconv.Itoa(int(lastInsertId)))
 			default:
-				werror.WformPanic("Primary Key " + engine.sql.GetModelStruct().GetPrimaryKeyAttr() + ", the kind " + fieldName.Kind().String() + " not support Primary Key")
+				werror.WormPanic("Primary Key " + engine.sql.GetModelStruct().GetPrimaryKeyAttr() + ", the kind " + fieldName.Kind().String() + " not support Primary Key")
 			}
 		}
 
@@ -670,7 +670,7 @@ func (engine *Engine) Delete(params ...interface{}) error {
 		var assertResult bool
 		useDelete, assertResult = params[1].(bool)
 		if !assertResult {
-			werror.WformPanic(fmt.Sprintf("%v must be bool", params[1]))
+			werror.WormPanic(fmt.Sprintf("%v must be bool", params[1]))
 		}
 	}
 

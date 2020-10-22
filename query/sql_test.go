@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/wform/wform/model"
+	"github.com/wform/worm/model"
 )
 
 func TestSql_BuildInsert(t *testing.T) {
@@ -79,6 +79,6 @@ func getSqlObj() *Sql {
 }
 
 type Product struct {
-	Id        int    `wform:"primary_key"`
-	FieldName string `wform:"column:field_name_test"`
+	Id        int    `worm:"primary_key"`
+	FieldName string `worm:"column:field_name_test"`
 }
