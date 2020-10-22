@@ -1,1 +1,4 @@
-*.profdeploypkg/*.idea.DS_Store
+*.prof
+.idea/
+.idea
+.DS_Store
