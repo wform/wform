@@ -575,7 +575,7 @@ func (engine *Engine) saveToDb(ignoreEmpty bool, models ...interface{}) error {
 		case reflect.Map:
 			var assertResult bool
 			modelMap, assertResult = mod.(map[string]interface{})
-			if assertResult {
+			if !assertResult {
 				werror.WormPanic(fmt.Sprintf("%v type error", mod))
 			}
 			sqlObj = engine.sql.Rows([]map[string]interface{}{modelMap})
